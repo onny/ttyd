@@ -47,6 +47,7 @@ static const struct option options[] = {
         {"signal-list",  no_argument,       NULL,  1},
         {"reconnect",    required_argument, NULL, 'r'},
         {"index",        required_argument, NULL, 'I'},
+        {"sub-url",      required_argument, NULL, 'U'},
         {"ipv6",         no_argument, NULL, '6'},
         {"ssl",          no_argument,       NULL, 'S'},
         {"ssl-cert",     required_argument, NULL, 'C'},
@@ -62,7 +63,7 @@ static const struct option options[] = {
         {"help",         no_argument,       NULL, 'h'},
         {NULL,           0,                 0,     0}
 };
-static const char *opt_string = "p:i:c:u:g:s:r:I:6aSC:K:A:Rt:T:Om:oBd:vh";
+static const char *opt_string = "p:i:c:u:g:s:r:I:U:6aSC:K:A:Rt:T:Om:oBd:vh";
 
 void print_help() {
     fprintf(stderr, "ttyd is a tool for sharing terminal over the web\n\n"
@@ -86,6 +87,7 @@ void print_help() {
                     "    -o, --once              Accept only one client and exit on disconnection\n"
                     "    -B, --browser           Open terminal with the default system browser\n"
                     "    -I, --index             Custom index.html path\n"
+                    "    -U, --sub-url           Define sub url path\n"
                     "    -6, --ipv6              Enable IPv6 support\n"
                     "    -S, --ssl               Enable SSL\n"
                     "    -C, --ssl-cert          SSL certificate file path\n"
@@ -149,6 +151,8 @@ tty_server_free(struct tty_server *ts) {
         free(ts->credential);
     if (ts->index != NULL)
         free(ts->index);
+    if (ts->sub_url != NULL)
+        free(ts->sub_url);
     free(ts->command);
     free(ts->prefs_json);
     int i = 0;
@@ -339,6 +343,10 @@ main(int argc, char **argv) {
                     return -1;
                 }
                 break;
+            case 'U':
+                fprintf(stdout, "Hallo sub url definiert\n");
+                server->sub_url = strdup(optarg);
+                break;
             case '6':
                 info.options &= ~(LWS_SERVER_OPTION_DISABLE_IPV6);
                 break;
@@ -457,6 +465,9 @@ main(int argc, char **argv) {
         lwsl_notice("  once: true\n");
     if (server->index != NULL) {
         lwsl_notice("  custom index.html: %s\n", server->index);
+    }
+    if (server->sub_url != NULL) {
+        lwsl_notice("  custom sub url: %s\n", server->sub_url);
     }
 
     signal(SIGINT, sig_handler);  // ^C

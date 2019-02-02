@@ -65,6 +65,7 @@ struct tty_server {
     char *credential;                         // encoded basic auth credential
     int reconnect;                            // reconnect timeout
     char *index;                              // custom index.html
+    char *sub_url;                            // custom sub url
     char *command;                            // full command line
     char **argv;                              // command with arguments
     int sig_code;                             // close signal
@@ -83,4 +84,3 @@ callback_http(struct lws *wsi, enum lws_callback_reasons reason, void *user, voi
 
 extern int
 callback_tty(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len);
-

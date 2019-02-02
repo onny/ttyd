@@ -238,10 +238,10 @@ callback_tty(struct lws *wsi, enum lws_callback_reasons reason,
                 lwsl_warn("refuse to serve WS client due to the --max-clients option.\n");
                 return 1;
             }
-            if (lws_hdr_copy(wsi, buf, sizeof(buf), WSI_TOKEN_GET_URI) <= 0 || strcmp(buf, WS_PATH) != 0) {
+            /*if (lws_hdr_copy(wsi, buf, sizeof(buf), WSI_TOKEN_GET_URI) <= 0 || strcmp(buf, WS_PATH) != 0) {
                 lwsl_warn("refuse to serve WS client for illegal ws path: %s\n", buf);
                 return 1;
-            }
+            }*/
 
             if (server->check_origin && !check_host_origin(wsi)) {
                 lwsl_warn("refuse to serve WS client from different origin due to the --check-origin option.\n");
