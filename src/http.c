@@ -81,7 +81,11 @@ callback_http(struct lws *wsi, enum lws_callback_reasons reason, void *user, voi
             p = buffer + LWS_PRE;
             end = p + sizeof(buffer) - LWS_PRE;
 
-            if (strncmp(pss->path, "/abc123/auth_token.js", 14) == 0) {
+	    char full_path[1024];
+	    strcpy(full_path, "/");
+	    strcat(full_path, server->sub_url);
+	    strcat(full_path, "/auth_token.js");
+            if (strcmp(pss->path, full_path) == 0) {
                 size_t n = server->credential != NULL ? sprintf(buf, "var tty_auth_token = '%s';", server->credential) : 0;
 
                 if (lws_add_http_header_status(wsi, HTTP_STATUS_OK, &p, end))
@@ -111,7 +115,9 @@ callback_http(struct lws *wsi, enum lws_callback_reasons reason, void *user, voi
 #endif
             }
 
-            if (strcmp(pss->path, "/abc123") != 0) {
+	    strcpy(full_path, "/");
+	    strcat(full_path, server->sub_url);
+            if (strcmp(pss->path, full_path) != 0) {
                 lws_return_http_status(wsi, HTTP_STATUS_NOT_FOUND, NULL);
                 goto try_to_reuse;
             }

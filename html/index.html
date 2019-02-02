@@ -40,6 +40,10 @@
             </div>
         </div>
     </div>
-    <script src="/abc123/auth_token.js"></script>
+    <script>
+	var imported = document.createElement('script');
+	imported.src = window.location.pathname+"/auth_token.js";
+	document.head.appendChild(imported);
+    </script>
 </body>
 </html>
